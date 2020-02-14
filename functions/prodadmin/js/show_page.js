@@ -48,17 +48,47 @@ async function show_page_secured() {
     for (let index = 0; index < products.length; index++) {
         // define p (this caused error): 'products at index'
         const p = products[index]
+        // skip any deleted elements
+        if (!p) continue
         // use .innerHTML for <complex> HTML, along with back quote
         // add id attribute to card div: unique id is doc id provided by firestore
         // add display: inline-block so the images will not display as a column
+        // manually added button: 2 functions here
         glPageContent.innerHTML += `
         <div id="${p.docId}" class="card" style="width: 18rem; display: inline-block">
             <img src="${p.image_url}" class="card-img-top">
             <div class="card-body">
             <h5 class="card-title">${p.name}</h5>
             <p class="card-text">${p.price}<br/>${p.summary}</p>
+            <button class="btn btn-primary" type="button"
+                onclick="editProduct(${index})">Edit</button>
+            <button class="btn btn-danger" type="button"
+                onclick="deleteProduct(${index})">Delete</button>
             </div>
         </div>
         `;
+    }
+}
+
+// index is provided
+async function deleteProduct(index) {
+    try {
+        // delete db information
+        const p = products[index]
+        // delete (1) Firestore doc, (2) Storage image
+        await firebase.firestore().collection(COLLECTION).doc(p.docId).delete()
+        const imageRef = firebase.storage().ref().child(IMAGE_FOLDER + p.image)
+        await imageRef.delete()
+
+        // delete visual in web browser
+        // card id ... get the card tag (unique id)
+        const card = document.getElementById(p.docId)
+        // remove by unique id (card)
+        card.parentNode.removeChild(card)
+
+        // add code to for loop: if (!p) continue
+        delete products[index]
+    } catch (e) {
+        glPageContent.innerHTML = 'Delete Error: <br>' + JSON.stringify(e)
     }
 }
