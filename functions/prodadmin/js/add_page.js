@@ -1,5 +1,5 @@
 function add_page() {
-    add_page_secured()
+    auth('prodadmin@test.com', add_page_secured, '/login')
 }
 
 // need to pass info from one fn to another: use global variable:

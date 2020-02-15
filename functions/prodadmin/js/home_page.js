@@ -1,5 +1,7 @@
 function home_page() {
-    home_page_secured()
+    // this is how we protect the page: only called if successfully authenticated
+    // auth.js: email, success (secured function is called), fail_url
+    auth('prodadmin@test.com', home_page_secured, '/login')
 }
 
 function home_page_secured() {

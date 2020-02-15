@@ -3,9 +3,10 @@ function auth(email, success, fail_url) {
   // user is a function here (arrow notation)
   firebase.auth().onAuthStateChanged(user => { 
     // user should be authenticated user
-    if (user && user.email == 'prodadmin@test.com') {
+    if (user && user.email == email) {
+      success()
     } else {
-
+      window.location.href = fail_url
     }
-})
+  })
 }

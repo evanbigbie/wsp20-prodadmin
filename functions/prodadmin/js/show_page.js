@@ -1,5 +1,5 @@
 function show_page() {
-    show_page_secured()
+    auth('prodadmin@test.com', show_page_secured, '/login')
 }
 
 // storing products in an array, functions can access
@@ -36,8 +36,6 @@ async function show_page_secured() {
         // return think of as 'stop here'
         return
     }
-
-    //console.log(products)
 
     if (products.length === 0) {
         // using += will allow to keep the navigation menu on the top
