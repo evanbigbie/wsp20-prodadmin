@@ -18,7 +18,13 @@ async function show_page_secured() {
         // array will store all product info
         products = []
         // snapshot (of this collection in the database)
-        const snapshot = await firebase.firestore().collection(COLLECTION).get()
+        const snapshot = await firebase.firestore().collection(COLLECTION)
+                        // add where clause for query:
+                        // (look at index types documentation - boookmarked in WSP)
+                        // (see: composite index, further down that page)
+                        //.where("name", "==", "YYYYYY")
+                        //.orderBy("price")
+                        .get()
 
         // read all the products from the collection
         snapshot.forEach( doc => {
